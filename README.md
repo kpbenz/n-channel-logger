@@ -8,4 +8,4 @@
 
 ## Call
 
-n-channel-logger [-c] [-n <name-prefix>] [-d <data-directory] <device>
+n-channel-logger [-c] [-n \<name-prefix\>] [-d \<data-directory\>] \<device\>
