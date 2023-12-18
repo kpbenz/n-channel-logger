@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+
+import argparse
+import serial
+from datetime import date
+
+logfile_date=None
+logfile = None
+
+
+def log_data( line ):
+    global args
+    global logfile_date
+    global logfile
+
+    create_new_logfile = False
+    current_date = date.today()
+
+    if not logfile_date:
+        logfile_date=current_date
+        create_new_logfile = True
+    elif logfile_date != current_date:
+        logfile_date = current_date
+        create_new_logfile = True
+
+    if create_new_logfile:
+        if logfile:
+            logfile.close()
+        logfile = open(f"{args.directory}/{args.prefix}{current_date}",mode="a+")
+
+    logfile.write(" ".join(line) + "\n" )
+
+parser = argparse.ArgumentParser(
+                    prog='n-channel-logger',
+                    description='Logs a string of whitespace-separeted data fields into timestamped logfiles.',
+                    epilog='(c) 2023 karsten@benz-engineering.co.nz')
+parser.add_argument('device',help='Data source')
+parser.add_argument('-d','--directory',default='.',help='Target directory for logfiles')
+parser.add_argument('-p','--prefix',default='log-',help='Prefix for log files')
+
+args=parser.parse_args()
+
+print(args)
+
+ser = serial.Serial(args.device)
+
+while(ser.is_open):
+    line=ser.readline().decode("utf-8").split()
+    log_data(line)
+
+ser.close()
+
