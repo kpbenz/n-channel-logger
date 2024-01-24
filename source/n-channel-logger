@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import sys
 import serial
 from datetime import date
 
@@ -29,6 +30,7 @@ def log_data( line ):
         logfile = open(f"{args.directory}/{args.prefix}{current_date}",mode="a+")
 
     logfile.write(" ".join(line) + "\n" )
+    logfile.flush()  # Make sure it's on disk
 
 parser = argparse.ArgumentParser(
                     prog='n-channel-logger',
@@ -42,11 +44,31 @@ args=parser.parse_args()
 
 print(args)
 
-ser = serial.Serial(args.device)
+if args.device == '-':
 
-while(ser.is_open):
-    line=ser.readline().decode("utf-8").split()
-    log_data(line)
+    while True:
 
-ser.close()
+        try:
+            line=sys.stdin.readline().split()
+        except EOFError:
+            print("% EOF detected.")
+            break;
+
+        if len(line) == 0:
+            print("% No input.")
+            break;
+
+        print(len(line),line)
+        log_data(line)
+
+else:
+
+
+    ser = serial.Serial(args.device)
+
+    while(ser.is_open):
+        line=ser.readline().decode("utf-8").split()
+        log_data(line)
+
+    ser.close()
 
