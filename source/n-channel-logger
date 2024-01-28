@@ -3,7 +3,7 @@
 import argparse
 import sys
 import serial
-from datetime import date
+from datetime import date,datetime
 
 logfile_date=None
 logfile = None
@@ -29,16 +29,21 @@ def log_data( line ):
             logfile.close()
         logfile = open(f"{args.directory}/{args.prefix}{current_date}",mode="a+")
 
+    if args.time_stamping:
+        line.insert(0,datetime.now().astimezone().isoformat(timespec='milliseconds'))
+
     logfile.write(" ".join(line) + "\n" )
     logfile.flush()  # Make sure it's on disk
 
 parser = argparse.ArgumentParser(
                     prog='n-channel-logger',
                     description='Logs a string of whitespace-separeted data fields into timestamped logfiles.',
-                    epilog='(c) 2023 karsten@benz-engineering.co.nz')
+                    epilog='(c) 2023-2024 karsten@benz-engineering.co.nz')
 parser.add_argument('device',help='Data source')
 parser.add_argument('-d','--directory',default='.',help='Target directory for logfiles')
 parser.add_argument('-p','--prefix',default='log-',help='Prefix for log files')
+parser.add_argument('-t','--time-stamping',action='store_true',help='Prepend per-second timestamp in ISO format')
+
 
 args=parser.parse_args()
 
