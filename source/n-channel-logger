@@ -27,7 +27,7 @@ def log_data( line ):
     if create_new_logfile:
         if logfile:
             logfile.close()
-        logfile = open(f"{args.directory}/{args.prefix}{current_date}",mode="a+")
+        logfile = open(f"{args.directory}/{args.prefix}-{current_date}.dat",mode="a+")
 
     if args.time_stamping:
         line.insert(0,datetime.now().astimezone().isoformat(timespec='milliseconds'))
@@ -43,6 +43,7 @@ parser.add_argument('device',help='Data source')
 parser.add_argument('-d','--directory',default='.',help='Target directory for logfiles')
 parser.add_argument('-p','--prefix',default='log-',help='Prefix for log files')
 parser.add_argument('-t','--time-stamping',action='store_true',help='Prepend per-second timestamp in ISO format')
+parser.add_argument('-c','--crc16-verification',action='store_true',help='Verifies the CRC-16 at end of record')
 
 
 args=parser.parse_args()
