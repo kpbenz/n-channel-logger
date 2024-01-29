@@ -33,7 +33,8 @@ def log_data( line ):
         line.insert(0,datetime.now().astimezone().isoformat(timespec='milliseconds'))
 
     logfile.write(" ".join(line) + "\n" )
-    logfile.flush()  # Make sure it's on disk
+    if args.flush:
+        logfile.flush()  # Make sure it's on disk
 
 # CRC-16/XMODEM implementation
 #
@@ -80,7 +81,7 @@ parser.add_argument('-d','--directory',default='.',help='Target directory for lo
 parser.add_argument('-p','--prefix',default='log-',help='Prefix for log files')
 parser.add_argument('-t','--time-stamping',action='store_true',help='Prepend per-second timestamp in ISO format')
 parser.add_argument('-c','--crc16-verification',action='store_true',help='Verifies the CRC-16 at end of record')
-
+parser.add_argument('-f','--flush',action='store_true',help='Flushes logs after every write')
 
 args=parser.parse_args()
 
