@@ -35,6 +35,42 @@ def log_data( line ):
     logfile.write(" ".join(line) + "\n" )
     logfile.flush()  # Make sure it's on disk
 
+# CRC-16/XMODEM implementation
+#
+def crc16(data: bytes):
+    '''
+    CRC-16/XMODEM Algorithm
+    '''
+    data = bytearray(data)
+    crc = 0
+    for b in data:
+        crc = (crc << 8) | ((crc >> 8) & 0xFF)
+        cur_byte = b & 0xFF
+        crc ^= cur_byte
+        crc^=(crc &0xff)>>4
+        crc^=(crc << 12)
+        crc^=(crc &0xff)<<5
+
+    return crc & 0xFFFF
+
+def crc_check(line: str) -> bool:
+    # find the space that separates the last
+    # token of the log and the CRC
+    last_space_pos = line.rfind(' ')
+
+    # shortes line: 'x CRC\n'
+    if last_space_pos < 1:
+        return False
+
+    crc_read = int(line[last_space_pos:].strip(),base=16)
+    crc_calc = crc16(line[0:last_space_pos].encode())
+
+    if crc_calc != crc_read:
+        return False
+    return True
+    
+
+
 parser = argparse.ArgumentParser(
                     prog='n-channel-logger',
                     description='Logs a string of whitespace-separeted data fields into timestamped logfiles.',
@@ -48,32 +84,60 @@ parser.add_argument('-c','--crc16-verification',action='store_true',help='Verifi
 
 args=parser.parse_args()
 
-print(args)
+# Print args for debugging
+# print(args)
 
 if args.device == '-':
 
     while True:
 
         try:
-            line=sys.stdin.readline().split()
+            raw_line=sys.stdin.readline()
         except EOFError:
             print("% EOF detected.")
-            break;
+            break
+        except:
+            print("% I/O error.")
+            break
+
+        line=raw_line.split()
 
         if len(line) == 0:
             print("% No input.")
-            break;
+            break
+
+        if args.crc16_verification and not crc_check(raw_line):
+            line.append("*** CRC-CHECK FAILED ***")
 
         print(len(line),line)
         log_data(line)
 
 else:
 
-
-    ser = serial.Serial(args.device)
+    ser = serial.Serial(args.device) # defaults: 9600 8N1
 
     while(ser.is_open):
-        line=ser.readline().decode("utf-8").split()
+        try:
+            raw_line = ser.readline().decode("utf-8")
+        except EOFError:
+            print("% EOF detected.")
+            break
+        except KeyboardInterrupt:
+            print("% Keyboard interrupt.")
+            break
+        except:
+            print("% I/O error.")
+            break
+
+        line=raw_line.split()
+
+        if len(line) == 0:
+            print("% No input.")
+            break;
+
+        if args.crc16_verification and not crc_check(raw_line):
+            line.append("*** CRC-CHECK FAILED ***")
+
         log_data(line)
 
     ser.close()
