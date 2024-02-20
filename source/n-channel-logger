@@ -82,6 +82,7 @@ parser.add_argument('-p','--prefix',default='log',help='Prefix for log files')
 parser.add_argument('-t','--time-stamping',action='store_true',help='Prepend per-second timestamp in ISO format')
 parser.add_argument('-c','--crc16-verification',action='store_true',help='Verifies the CRC-16 at end of record')
 parser.add_argument('-f','--flush',action='store_true',help='Flushes logs after every write')
+parser.add_argument('-v','--verbose',action='store_true', help='Print received strings to stdout')
 
 args=parser.parse_args()
 
@@ -110,7 +111,9 @@ if args.device == '-':
         if args.crc16_verification and not crc_check(raw_line):
             line.append("*** CRC-CHECK FAILED ***")
 
-        print(len(line),line)
+        if args.verbose:
+            print(datetime.now().astimezone().isoformat(timespec='milliseconds'),line)
+
         log_data(line)
 
 else:
@@ -138,6 +141,9 @@ else:
 
         if args.crc16_verification and not crc_check(raw_line):
             line.append("*** CRC-CHECK FAILED ***")
+
+        if args.verbose:
+            print(datetime.now().astimezone().isoformat(timespec='milliseconds'),line)
 
         log_data(line)
 
