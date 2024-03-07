@@ -129,8 +129,11 @@ else:
         except KeyboardInterrupt:
             print("% Keyboard interrupt.")
             break
+        except IOError as e:
+            print(f"% I/O error: {e}.")
+            break
         except:
-            print("% I/O error.")
+            print("% Unknown error.")
             break
 
         line=raw_line.split()
