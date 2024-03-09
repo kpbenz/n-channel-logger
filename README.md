@@ -14,19 +14,20 @@ usage: n-channel-logger [-h] [-d DIRECTORY] [-p PREFIX] [-t] [-c] [-f] [-v] devi
 
 Logs a string of whitespace-separeted data fields into timestamped logfiles.
 
-positional arguments:
-  device                Data source
+### Positional arguments:
+| Argument | Description |
+| -------- | ----------- |
+| device   | Data source |
 
-options:
-  -h, --help            show this help message and exit
-  -d DIRECTORY, --directory DIRECTORY
-                        Target directory for logfiles
-  -p PREFIX, --prefix PREFIX
-                        Prefix for log files
-  -t, --time-stamping   Prepend per-second timestamp in ISO format
-  -c, --crc16-verification
-                        Verifies the CRC-16 at end of record
-  -f, --flush           Flushes logs after every write
-  -v, --verbose         Print received strings to stdout
+### Pptions:
+  | Short option | Long Option           | Description                                |
+  | ------------ | --------------------- | ------------------------------------------ |
+  | -h           | --help                | Show this help message and exit            |
+  | -d DIRECTORY | --directory DIRECTORY | Target directory for logfiles              |
+  | -p PREFIX,   | --prefix PREFIX       | Prefix for log files                       |
+  | -t           | --time-stamping       | Prepend per-second timestamp in ISO format |
+  | -c           | --crc16-verification  | Verifies the CRC-16 at end of record       |
+  | -f           | --flush               | Flushes logs after every write             |
+  | -v           | --verbose             | Print received strings to stdout           |
 
 (c) 2023-2024 karsten@benz-engineering.co.nz
