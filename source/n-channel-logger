@@ -63,8 +63,12 @@ def crc_check(line: str) -> bool:
     if last_space_pos < 1:
         return False
 
-    crc_read = int(line[last_space_pos:].strip(),base=16)
-    crc_calc = crc16(line[0:last_space_pos].encode())
+    try:
+        crc_read = int(line[last_space_pos:].strip(),base=16)
+    except ValueError:
+        return False
+
+    crc_calc = crc16(line[0:last_space_pos].encode(encoding='utf-8', errors='ignore'))
 
     if crc_calc != crc_read:
         return False
@@ -122,7 +126,8 @@ else:
 
     while(ser.is_open):
         try:
-            raw_line = ser.readline().decode("utf-8")
+            raw_line = ser.readline()
+            raw_line_decoded = raw_line.decode('utf-8',errors='backslashreplace')
         except EOFError:
             print("% EOF detected.")
             break
@@ -133,16 +138,16 @@ else:
             print(f"% I/O error: {e}.")
             break
         except Exception as e:
-            print(f"% Unknown error: {e}.")
+            print(f"% Unknown error: {e}.\nRaw line: '{raw_line}'")
             break
 
-        line=raw_line.split()
+        line=raw_line_decoded.split()
 
         if len(line) == 0:
             print("% No input.")
             break;
 
-        if args.crc16_verification and not crc_check(raw_line):
+        if args.crc16_verification and not crc_check(raw_line_decoded):
             line.append("*** CRC-CHECK FAILED ***")
 
         if args.verbose:
