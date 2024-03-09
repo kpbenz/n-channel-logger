@@ -132,8 +132,8 @@ else:
         except IOError as e:
             print(f"% I/O error: {e}.")
             break
-        except:
-            print("% Unknown error.")
+        except Exception as e:
+            print(f"% Unknown error: {e}.")
             break
 
         line=raw_line.split()
