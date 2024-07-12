@@ -81,7 +81,7 @@ parser = argparse.ArgumentParser(
                     prog='n-channel-logger',
                     description='Logs a string of whitespace-separeted data fields into timestamped logfiles.',
                     epilog='(c) 2023-2024 karsten@benz-engineering.co.nz')
-parser.add_argument('--version', action='version', version='%(prog)s v{version}'.format(version=__version__))
+parser.add_argument('-V','--version', action='version', version='%(prog)s v{version}'.format(version=__version__))
 parser.add_argument('device',help='Data source')
 parser.add_argument('-d','--directory',default='.',help='Target directory for logfiles')
 parser.add_argument('-p','--prefix',default='log',help='Prefix for log files')
