@@ -29,5 +29,6 @@ Logs a string of whitespace-separeted data fields into timestamped logfiles.
   | -c           | --crc16-verification  | Verifies the CRC-16 at end of record       |
   | -f           | --flush               | Flushes logs after every write             |
   | -v           | --verbose             | Print received strings to stdout           |
+  | -V           | --version             | Show version number                        |
 
 (c) 2023-2024 karsten@benz-engineering.co.nz
