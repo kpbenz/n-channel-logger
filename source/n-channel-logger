@@ -11,7 +11,7 @@ import serial
 
 __version__ = "1.0"
 
-def log_data( log_line: list[str] ):
+def log_data( log_line ):
     '''
     Handles logging:
         - Creates new logfile if necessary.
