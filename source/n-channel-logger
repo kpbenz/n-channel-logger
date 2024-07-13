@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+'''
+Logs a string of whitespace-separeted data fields into timestamped logfiles.
+'''
 
 import argparse
 import sys
@@ -11,9 +14,12 @@ logfile = None
 __version__ = "1.0"
 
 def log_data( line ):
-    global args
-    global logfile_date
-    global logfile
+    '''
+    Handles logging:
+        - Creates new logfile if necessary.
+        - Appends data to existing logfile.
+        - Flushes data if argument is set.
+    '''
 
     create_new_logfile = False
     current_date = date.today()
@@ -74,21 +80,28 @@ def crc_check(line: str) -> bool:
     if crc_calc != crc_read:
         return False
     return True
-    
 
 
-parser = argparse.ArgumentParser(
-                    prog='n-channel-logger',
-                    description='Logs a string of whitespace-separeted data fields into timestamped logfiles.',
-                    epilog='(c) 2023-2024 karsten@benz-engineering.co.nz')
-parser.add_argument('-V','--version', action='version', version='%(prog)s v{version}'.format(version=__version__))
-parser.add_argument('device',help='Data source')
-parser.add_argument('-d','--directory',default='.',help='Target directory for logfiles')
-parser.add_argument('-p','--prefix',default='log',help='Prefix for log files')
-parser.add_argument('-t','--time-stamping',action='store_true',help='Prepend per-second timestamp in ISO format')
-parser.add_argument('-c','--crc16-verification',action='store_true',help='Verifies the CRC-16 at end of record')
-parser.add_argument('-f','--flush',action='store_true',help='Flushes logs after every write')
-parser.add_argument('-v','--verbose',action='store_true', help='Print received strings to stdout')
+
+parser = argparse.ArgumentParser(prog='n-channel-logger',
+        description='Logs a string of whitespace-separeted data fields into timestamped logfiles.',
+        epilog='(c) 2023-2024 karsten@benz-engineering.co.nz')
+parser.add_argument('-V','--version', action='version', 
+        version='%(prog)s v{version}'.format(version=__version__))
+parser.add_argument('device',
+        help='Data source')
+parser.add_argument('-d','--directory',default='.',
+        help='Target directory for logfiles')
+parser.add_argument('-p','--prefix',default='log',
+        help='Prefix for log files')
+parser.add_argument('-t','--time-stamping',action='store_true',
+        help='Prepend per-second timestamp in ISO format')
+parser.add_argument('-c','--crc16-verification',action='store_true',
+        help='Verifies the CRC-16 at end of record')
+parser.add_argument('-f','--flush',action='store_true',
+        help='Flushes logs after every write')
+parser.add_argument('-v','--verbose',action='store_true',
+        help='Print received strings to stdout')
 
 args=parser.parse_args()
 
