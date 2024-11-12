@@ -1,0 +1,11 @@
+[Unit]
+Description=Magnetometer Logger
+# Documentation=
+AssertPathExists=/home/pi/n-channel-logger/source/n-channel-logger
+
+[Service]
+User=pi
+ExecStart=/home/pi/n-channel-logger/source/n-channel-logger -t -v -c -d /home/pi/data/magnetometer -p magmeter /dev/ttyS0
+
+[Install]
+WantedBy=multi-user.target
