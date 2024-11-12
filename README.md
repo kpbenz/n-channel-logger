@@ -2,7 +2,7 @@
 
 ## Features
 - Log data strings
-- Option: Adds ISO timestamps (2023-12-01T14:50:00.012+13:00) in millisecond precision with timezone offset
+- Option: Adds ISO timestamps (2023-12-01T14:50:00.012+13:00) in millisecond precision and timezone offset
 - Option: Check CRC-16 at end of record and mark record as failed in case of mismatch.
 - Daily rotation of logfiles
 - A serial devices will be opened wit 9600Bd, 8 data bits, no parity and 1 stop-bit.
@@ -12,7 +12,7 @@
 
 usage: n-channel-logger [-h] [-d DIRECTORY] [-p PREFIX] [-t] [-c] [-f] [-v] device
 
-Logs a string of whitespace-separeted data fields into timestamped logfiles.
+Logs a string of whitespace-separated data fields into timestamped logfiles.
 
 ### Positional arguments:
 | Argument | Description |
